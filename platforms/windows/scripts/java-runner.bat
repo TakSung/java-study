@@ -1,4 +1,4 @@
-@echo off
+﻿@echo off
 rem Java/Maven 프로젝트를 위한 래퍼 스크립트 (Windows용)
 rem 사용법: java-runner.bat [command] [options]
 
