@@ -1,13 +1,24 @@
 name: java-runner
-description: Java Maven 프로젝트의 빌드, 실행, 테스트, 정리를 위한 스킬. `scripts/java-runner.sh`를 사용합니다.
+description: Java Maven 멀티모듈 프로젝트의 빌드, 실행, 테스트, 정리를 위한 스킬. .katarc의 CURRENT_LESSON을 읽어 해당 모듈에서 작업합니다.
 allowed-tools: Bash
 ---
 
 # Java Runner - Java Maven 프로젝트 실행 및 검증 스킬
 
-이 스킬은 `scripts/java-runner.sh` 래퍼 스크립트를 사용하여 Maven 프로젝트를 빌드, 테스트, 실행 및 정리합니다.
+이 스킬은 `scripts/java-runner.sh` 래퍼 스크립트를 사용하여 Maven 멀티모듈 프로젝트를 빌드, 테스트, 실행 및 정리합니다.
 
-모든 명령어는 `pom.xml` 파일이 있는 프로젝트 루트에서 실행되는 것을 기준으로 합니다.
+스크립트는 `.katarc` 파일의 `CURRENT_LESSON` 변수를 읽어 자동으로 해당 모듈 디렉토리로 이동한 후 Maven 명령을 실행합니다.
+
+## 작동 방식
+
+1. `.katarc`에서 `CURRENT_LESSON` 읽기 (예: `01-hello-world`)
+2. 해당 모듈 디렉토리로 이동
+3. Maven 명령 실행
+
+예시:
+- `.katarc`: `CURRENT_LESSON=02-variables`
+- 실행: `./scripts/java-runner.sh test`
+- 내부 동작: `cd 02-variables && mvn test`
 
 ## 주요 명령어
 
@@ -135,3 +146,13 @@ Java 프로젝트는 표준 Maven 디렉터리 구조를 따릅니다.
         <maven.compiler.target>21</maven.compiler.target>
     </properties>
     ```
+
+**문제: `Lesson directory not found`**
+- **해결책**: `.katarc`의 `CURRENT_LESSON` 값이 실제 존재하는 디렉토리인지 확인하세요.
+    ```bash
+    cat .katarc | grep CURRENT_LESSON
+    ls -d 01-*  # 실제 lesson 디렉토리 확인
+    ```
+
+**문제: `CURRENT_LESSON not set in .katarc`**
+- **해결책**: `.katarc` 파일에 `CURRENT_LESSON=01-hello-world` 형식으로 변수를 추가하세요.
