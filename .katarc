@@ -1,8 +1,12 @@
-# Python Katas Configuration
-# Current active kata project
-# Copy this file to .katarc and modify as needed
-
+# Python & Java Katas Configuration
+# Current active kata project (for Python katas or Java kata exercises)
 CURRENT_KATA=hidden-number
+
+# Current active lesson project (for APCS Java lessons)
+CURRENT_LESSON=01-hello-world
+
+# Default project type for study-note-helper.sh (kata or lesson)
+DEFAULT_PROJECT_TYPE=lesson
 
 # Platform-specific settings will be added by setup-platform.py
 # DO NOT manually add platform settings below this line

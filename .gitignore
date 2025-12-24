@@ -867,3 +867,8 @@ FodyWeavers.xsd
 
 # End of https://www.toptal.com/developers/gitignore/api/java,git,windows,macos,linux,eclipse,visualstudio,visualstudiocode,intellij,intellij+iml,intellij+all
 
+**.py
+
+**temp**
+**.backup**
+**.bak**
