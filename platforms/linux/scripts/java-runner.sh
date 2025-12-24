@@ -25,6 +25,27 @@ fail() {
     exit 1
 }
 
+# --- Configuration Loading ---
+# Load CURRENT_LESSON from .katarc
+load_lesson() {
+    local script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    local project_root="$(dirname "$script_dir")"
+    local katarc_file="$project_root/.katarc"
+
+    if [ ! -f "$katarc_file" ]; then
+        # .katarc 없으면 현재 디렉토리 사용 (하위 호환성)
+        return
+    fi
+
+    # CURRENT_LESSON 값 읽기
+    CURRENT_LESSON=$(grep "^CURRENT_LESSON=" "$katarc_file" | cut -d'=' -f2 | tr -d ' ')
+
+    if [ -n "$CURRENT_LESSON" ]; then
+        export CURRENT_LESSON
+        export PROJECT_ROOT="$project_root"
+    fi
+}
+
 # --- 작업 정의 ---
 
 # 도움말 출력
@@ -39,17 +60,43 @@ print_help() {
     echo "  package          - Package the application into a JAR/WAR file using 'mvn package'."
     echo "  help             - Show this help message."
     echo ""
+    echo "Multi-module support:"
+    echo "  - If run from project root, automatically navigates to CURRENT_LESSON directory"
+    echo "  - CURRENT_LESSON is read from .katarc file"
+    echo "  - Example: CURRENT_LESSON=01-hello-world → 01-hello-world"
+    echo ""
     echo "Examples:"
-    echo "  ./scripts/java-runner.sh test"
-    echo "  ./scripts/java-runner.sh test -Dtest=com.example.MyTest"
-    echo "  ./scripts/java-runner.sh run"
+    echo "  ./scripts/java-runner.sh test        # From project root (uses CURRENT_LESSON)"
+    echo "  ./scripts/java-runner.sh run         # Automatically navigates to correct module"
+    echo ""
+    echo "Troubleshooting:"
+    echo "  - Ensure .katarc has CURRENT_LESSON set (e.g., CURRENT_LESSON=01-hello-world)"
+    echo "  - Or run from within a module directory containing pom.xml"
 }
 
-# Maven 실행 전 pom.xml 확인
+# Maven 실행 전 pom.xml 확인 및 자동 디렉토리 이동
 check_pom() {
-    if [ ! -f "pom.xml" ]; then
-        fail "pom.xml not found in the current directory. Please run this script from the project root."
+    # 1. 현재 디렉토리에 pom.xml이 있으면 바로 사용
+    if [ -f "pom.xml" ]; then
+        info "Found pom.xml in current directory."
+        return
     fi
+
+    # 2. CURRENT_LESSON 설정이 있으면 해당 디렉토리로 이동
+    if [ -n "$CURRENT_LESSON" ] && [ -n "$PROJECT_ROOT" ]; then
+        local lesson_dir="$PROJECT_ROOT/$CURRENT_LESSON"
+
+        if [ -d "$lesson_dir" ] && [ -f "$lesson_dir/pom.xml" ]; then
+            info "Navigating to $CURRENT_LESSON (from CURRENT_LESSON)"
+            cd "$lesson_dir" || fail "Failed to navigate to $lesson_dir"
+            return
+        else
+            fail "CURRENT_LESSON is set to '$CURRENT_LESSON', but $lesson_dir/pom.xml not found."
+        fi
+    fi
+
+    # 3. 둘 다 실패하면 에러
+    fail "pom.xml not found. Please ensure you're in a Maven project directory or set CURRENT_LESSON in .katarc"
 }
 
 # 테스트 실행
@@ -95,6 +142,9 @@ package_project() {
 
 # --- 메인 로직 ---
 main() {
+    # .katarc 읽기 (맨 처음 실행)
+    load_lesson
+
     if [ -z "$1" ]; then
         info "No command provided. Showing help."
         print_help

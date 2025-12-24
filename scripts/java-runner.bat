@@ -1,6 +1,6 @@
 @echo off
 REM ==============================================================================
-REM study-note-helper.bat - Windows launcher
+REM java-runner.bat - Windows launcher
 REM Delegates to platform-specific script
 REM ==============================================================================
 
@@ -9,4 +9,4 @@ set "SCRIPT_DIR=%~dp0"
 set "PROJECT_ROOT=%SCRIPT_DIR%.."
 
 REM Call Windows-specific script
-call "%PROJECT_ROOT%\platforms\windows\scripts\study-note-helper.bat" %*
+call "%PROJECT_ROOT%\platforms\windows\scripts\java-runner.bat" %*

@@ -16,7 +16,7 @@ KATARC_FILE="$PROJECT_ROOT/.katarc"
 
 # --- Error Codes ---
 ERROR_NO_KATARC=1
-ERROR_NO_CURRENT_KATA=2
+ERROR_NO_CURRENT_LESSON=2
 ERROR_MISSING_ARGS=3
 ERROR_STUDY_DIR_CREATE_FAILED=4
 ERROR_APPEND_FAILED=5
@@ -55,21 +55,20 @@ load_katarc() {
         error_exit ".katarc 파일을 찾을 수 없습니다: $KATARC_FILE" $ERROR_NO_KATARC
     fi
 
-    # Source the .katarc file to get CURRENT_KATA
-    # Using grep/sed for safety instead of direct sourcing
-    CURRENT_KATA=$(grep "^CURRENT_KATA=" "$KATARC_FILE" | cut -d'=' -f2 | tr -d ' ')
+    # Load CURRENT_LESSON
+    CURRENT_LESSON=$(grep "^CURRENT_LESSON=" "$KATARC_FILE" | cut -d'=' -f2 | tr -d ' ')
 
-    if [[ -z "$CURRENT_KATA" ]]; then
-        error_exit ".katarc에 CURRENT_KATA 변수가 설정되지 않았습니다." $ERROR_NO_CURRENT_KATA
+    if [[ -z "$CURRENT_LESSON" ]]; then
+        error_exit ".katarc에 CURRENT_LESSON 변수가 설정되지 않았습니다." $ERROR_NO_CURRENT_LESSON
     fi
 
-    info_msg "현재 KATA: $CURRENT_KATA"
+    info_msg "현재 레슨: $CURRENT_LESSON"
 }
 
 # Resolve study directory path
 get_study_path() {
-    local kata="$1"
-    echo "$PROJECT_ROOT/$kata/docs/study"
+    local lesson="$1"
+    echo "$PROJECT_ROOT/$lesson/docs/study"
 }
 
 # Get archive file path
@@ -183,7 +182,7 @@ cmd_search() {
     load_katarc
 
     # Resolve paths
-    local study_path=$(get_study_path "$CURRENT_KATA")
+    local study_path=$(get_study_path "$CURRENT_LESSON")
     local archive_path=$(get_archive_path "$study_path")
 
     # Check if archive exists
@@ -264,7 +263,7 @@ cmd_stats() {
     load_katarc
 
     # Resolve paths
-    local study_path=$(get_study_path "$CURRENT_KATA")
+    local study_path=$(get_study_path "$CURRENT_LESSON")
     local archive_path=$(get_archive_path "$study_path")
 
     # Check if archive exists
@@ -349,7 +348,7 @@ cmd_add() {
     load_katarc
 
     # Resolve paths
-    local study_path=$(get_study_path "$CURRENT_KATA")
+    local study_path=$(get_study_path "$CURRENT_LESSON")
     local archive_path=$(get_archive_path "$study_path")
 
     # Ensure directory and file exist
@@ -384,19 +383,19 @@ usage() {
 
 예시:
   # 노트 추가
-  $0 add --keyword "fork, exec" --content "fork()는 프로세스를 복제하고, exec()는 새 프로그램으로 교체한다."
-  $0 add --keyword "메모리 누수" --content "Valgrind로 메모리 누수를 확인했다. free() 누락 발견."
+  $0 add --keyword "변수, 타입" --content "Java에서 int는 4바이트 정수형이다."
+  $0 add --keyword "조건문" --content "if-else 문을 사용하여 조건부 실행을 구현할 수 있다."
 
   # 키워드 검색
-  $0 search --keyword "fork"
-  $0 search --keyword "메모리"
+  $0 search --keyword "변수"
+  $0 search --keyword "조건문"
 
   # 키워드 통계
   $0 stats
 
 환경:
-  .katarc 파일에서 CURRENT_KATA를 읽어 대상 프로젝트를 결정합니다.
-  아카이브 위치: \${CURRENT_KATA}/docs/study/아카이브.md
+  .katarc 파일에서 CURRENT_LESSON을 읽어 대상 레슨을 결정합니다.
+  아카이브 위치: \${CURRENT_LESSON}/docs/study/아카이브.md
 
 EOF
 }

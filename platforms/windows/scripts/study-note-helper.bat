@@ -15,7 +15,7 @@ set KATARC_FILE=.katarc
 
 REM Error codes
 set ERROR_NO_KATARC=1
-set ERROR_NO_CURRENT_KATA=2
+set ERROR_NO_CURRENT_LESSON=2
 set ERROR_MISSING_ARGS=3
 set ERROR_STUDY_DIR_CREATE_FAILED=4
 set ERROR_APPEND_FAILED=5
@@ -26,25 +26,25 @@ set "GREEN=[32m"
 set "YELLOW=[33m"
 set "NC=[0m"
 
-REM Load CURRENT_KATA from .katarc
+REM Load CURRENT_LESSON from .katarc
 if not exist "%KATARC_FILE%" (
     echo %RED%❌ 오류:%NC% .katarc 파일을 찾을 수 없습니다: %KATARC_FILE%
     exit /b %ERROR_NO_KATARC%
 )
 
 for /f "tokens=1,2 delims==" %%a in (%KATARC_FILE%) do (
-    if "%%a"=="CURRENT_KATA" set CURRENT_KATA=%%b
+    if "%%a"=="CURRENT_LESSON" set CURRENT_LESSON=%%b
 )
 
-if "%CURRENT_KATA%"=="" (
-    echo %RED%❌ 오류:%NC% .katarc에 CURRENT_KATA 변수가 설정되지 않았습니다.
-    exit /b %ERROR_NO_CURRENT_KATA%
+if "%CURRENT_LESSON%"=="" (
+    echo %RED%❌ 오류:%NC% .katarc에 CURRENT_LESSON 변수가 설정되지 않았습니다.
+    exit /b %ERROR_NO_CURRENT_LESSON%
 )
 
-echo %YELLOW%ℹ%NC%  현재 KATA: %CURRENT_KATA%
+echo %YELLOW%ℹ%NC%  현재 레슨: %CURRENT_LESSON%
 
 REM Paths
-set STUDY_PATH=%CURRENT_KATA%\docs\study
+set STUDY_PATH=%CURRENT_LESSON%\docs\study
 set ARCHIVE_PATH=%STUDY_PATH%\아카이브.md
 
 REM Command dispatcher
@@ -217,17 +217,18 @@ echo   --keyword ^<text^>   검색할 키워드
 echo.
 echo 예시:
 echo   # 노트 추가
-echo   %~nx0 add --keyword "fork, exec" --content "fork()는 프로세스를 복제하고, exec()는 새 프로그램으로 교체한다."
+echo   %~nx0 add --keyword "변수, 타입" --content "Java에서 int는 4바이트 정수형이다."
+echo   %~nx0 add --keyword "조건문" --content "if-else 문을 사용하여 조건부 실행을 구현할 수 있다."
 echo.
 echo   # 키워드 검색
-echo   %~nx0 search --keyword "fork"
+echo   %~nx0 search --keyword "변수"
 echo.
 echo   # 키워드 통계
 echo   %~nx0 stats
 echo.
 echo 환경:
-echo   .katarc 파일에서 CURRENT_KATA를 읽어 대상 프로젝트를 결정합니다.
-echo   아카이브 위치: %%CURRENT_KATA%%\docs\study\아카이브.md
+echo   .katarc 파일에서 CURRENT_LESSON을 읽어 대상 레슨을 결정합니다.
+echo   아카이브 위치: %%CURRENT_LESSON%%\docs\study\아카이브.md
 echo.
 exit /b 0
 
