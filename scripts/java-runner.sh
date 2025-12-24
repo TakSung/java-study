@@ -63,7 +63,7 @@ print_help() {
     echo "Multi-module support:"
     echo "  - If run from project root, automatically navigates to CURRENT_LESSON directory"
     echo "  - CURRENT_LESSON is read from .katarc file"
-    echo "  - Example: CURRENT_LESSON=01-hello-world → java-apcs-lessons/01-hello-world"
+    echo "  - Example: CURRENT_LESSON=01-hello-world → 01-hello-world"
     echo ""
     echo "Examples:"
     echo "  ./scripts/java-runner.sh test        # From project root (uses CURRENT_LESSON)"
@@ -84,10 +84,10 @@ check_pom() {
 
     # 2. CURRENT_LESSON 설정이 있으면 해당 디렉토리로 이동
     if [ -n "$CURRENT_LESSON" ] && [ -n "$PROJECT_ROOT" ]; then
-        local lesson_dir="$PROJECT_ROOT/java-apcs-lessons/$CURRENT_LESSON"
+        local lesson_dir="$PROJECT_ROOT/$CURRENT_LESSON"
 
         if [ -d "$lesson_dir" ] && [ -f "$lesson_dir/pom.xml" ]; then
-            info "Navigating to java-apcs-lessons/$CURRENT_LESSON (from CURRENT_LESSON)"
+            info "Navigating to $CURRENT_LESSON (from CURRENT_LESSON)"
             cd "$lesson_dir" || fail "Failed to navigate to $lesson_dir"
             return
         else

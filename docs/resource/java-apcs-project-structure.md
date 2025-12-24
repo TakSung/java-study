@@ -6,14 +6,17 @@
 
 ## 1. 프로젝트 구조 개요
 
-APCS Java 학습 프로젝트는 **Maven 멀티 모듈(Multi-module) 프로젝트** 구조를 채택합니다. 각 학습 단원(예: 변수, 조건문)은 하나의 독립적인 Maven 모듈로 구성됩니다. 이 방식은 실제 Java 개발에서 널리 사용되는 표준이며, 각 단원을 독립적인 단위로 관리하면서도 전체 학습 과정을 하나의 프로젝트로 묶을 수 있는 장점이 있습니다.
+APCS Java 학습 프로젝트는 각 학습 단원(예: 변수, 조건문)이 하나의 독립적인 Maven 프로젝트로 구성됩니다. 이 방식은 실제 Java 개발에서 널리 사용되는 표준이며, 각 단원을 독립적인 단위로 관리할 수 있는 장점이 있습니다.
 
 ```
-java-apcs-lessons/
-├── pom.xml            (전체 프로젝트를 관리하는 부모 설정 파일)
+java-study/
+├── .katarc              (현재 학습 중인 레슨 설정)
 │
 ├── 01-hello-world/      (첫 번째 단원: Hello World)
 │   ├── pom.xml
+│   ├── docs/
+│   │   └── study/
+│   │       └── 아카이브.md
 │   └── src/
 │       └── main/
 │           └── java/
@@ -22,6 +25,9 @@ java-apcs-lessons/
 │
 ├── 02-variables/        (두 번째 단원: 변수와 타입)
 │   ├── pom.xml
+│   ├── docs/
+│   │   └── study/
+│   │       └── 아카이브.md
 │   └── src/
 │       ├── main/
 │       │   └── java/
@@ -34,6 +40,9 @@ java-apcs-lessons/
 │
 └── 03-conditionals/     (세 번째 단원: 조건문)
     ├── pom.xml
+    ├── docs/
+    │   └── study/
+    │       └── 아카이브.md
     └── src/
         ├── main/
         │   └── java/
@@ -51,11 +60,11 @@ java-apcs-lessons/
 
 ### 2.1. Eclipse 및 IDE 호환성
 
-Eclipse (m2e 플러그션 사용 시) 또는 IntelliJ IDEA와 같은 주요 Java IDE에서 `java-apcs-lessons` 최상위 폴더를 '기존 Maven 프로젝트 가져오기(Import Existing Maven Projects)' 기능으로 불러오면, 각 단원 폴더(`01-hello-world/`, `02-variables/` 등)가 IDE 내에서 독립적인 모듈로 자동으로 인식됩니다. 이는 실제 Java 개발 환경과 동일한 경험을 제공하며, 학생들이 IDE 사용법을 자연스럽게 익히는 데 도움을 줍니다.
+Eclipse (m2e 플러그션 사용 시) 또는 IntelliJ IDEA와 같은 주요 Java IDE에서 각 단원 폴더(`01-hello-world/`, `02-variables/` 등)를 '기존 Maven 프로젝트 가져오기(Import Existing Maven Projects)' 기능으로 불러오면 독립적인 프로젝트로 인식됩니다. 이는 실제 Java 개발 환경과 동일한 경험을 제공하며, 학생들이 IDE 사용법을 자연스럽게 익히는 데 도움을 줍니다.
 
 ### 2.2. 학습 진행 상황 추적 용이성
 
-`.katarc` 파일과 같은 학습 추적 메커니즘은 `java-apcs-lessons` 최상위 폴더에 위치하여, 현재 학습 중인 단원(모듈)의 이름을 기록할 수 있습니다. 예를 들어, `.katarc` 파일에 `current_lesson = "02-variables"`와 같이 저장하여 학습자가 어느 단원을 진행 중인지 쉽게 파악하고 다음 학습을 안내할 수 있습니다.
+`.katarc` 파일은 프로젝트 루트에 위치하여 현재 학습 중인 단원의 이름을 기록합니다. 예를 들어, `.katarc` 파일에 `CURRENT_LESSON=02-variables`와 같이 저장하여 학습자가 어느 단원을 진행 중인지 쉽게 파악하고 다음 학습을 안내할 수 있습니다.
 
 ### 2.3. 독립적인 학습 단위
 

@@ -9,19 +9,14 @@
 export LC_ALL=C.UTF-8
 export LANG=ko_KR.UTF-8
 
-# --- Project Type Constants ---
-PROJECT_TYPE_KATA="kata"
-PROJECT_TYPE_LESSON="lesson"
-
 # --- Configuration ---
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 KATARC_FILE="$PROJECT_ROOT/.katarc"
-DEFAULT_PROJECT_TYPE=""  # Will be loaded from .katarc
 
 # --- Error Codes ---
 ERROR_NO_KATARC=1
-ERROR_NO_CURRENT_KATA=2
+ERROR_NO_CURRENT_LESSON=2
 ERROR_MISSING_ARGS=3
 ERROR_STUDY_DIR_CREATE_FAILED=4
 ERROR_APPEND_FAILED=5
@@ -54,57 +49,26 @@ info_msg() {
     echo -e "${YELLOW}ℹ${NC}  $1"
 }
 
-# Load .katarc configuration and determine project type
+# Load .katarc configuration
 load_katarc() {
     if [[ ! -f "$KATARC_FILE" ]]; then
         error_exit ".katarc 파일을 찾을 수 없습니다: $KATARC_FILE" $ERROR_NO_KATARC
     fi
 
-    # Load DEFAULT_PROJECT_TYPE from .katarc
-    DEFAULT_PROJECT_TYPE=$(grep "^DEFAULT_PROJECT_TYPE=" "$KATARC_FILE" | cut -d'=' -f2 | tr -d ' ')
-    if [[ -z "$DEFAULT_PROJECT_TYPE" ]]; then
-        DEFAULT_PROJECT_TYPE="kata"  # Fallback default
+    # Load CURRENT_LESSON
+    CURRENT_LESSON=$(grep "^CURRENT_LESSON=" "$KATARC_FILE" | cut -d'=' -f2 | tr -d ' ')
+
+    if [[ -z "$CURRENT_LESSON" ]]; then
+        error_exit ".katarc에 CURRENT_LESSON 변수가 설정되지 않았습니다." $ERROR_NO_CURRENT_LESSON
     fi
 
-    # Load project identifiers
-    CURRENT_KATA=$(grep "^CURRENT_KATA=" "$KATARC_FILE" | cut -d'=' -f2 | tr -d ' ')
-    CURRENT_LESSON=$(grep "^CURRENT_LESSON=" "$KATARC_FILE" | cut -d'=' -f2 | tr -d ' ')
-}
-
-# Determine which project to use based on type and CLI args
-# Args: $1 = CLI-specified project type (optional)
-resolve_project() {
-    local cli_type="$1"
-    local project_type="${cli_type:-$DEFAULT_PROJECT_TYPE}"
-    local project_name=""
-
-    case "$project_type" in
-        "$PROJECT_TYPE_KATA")
-            project_name="$CURRENT_KATA"
-            if [[ -z "$project_name" ]]; then
-                error_exit ".katarc에 CURRENT_KATA 변수가 설정되지 않았습니다." $ERROR_NO_CURRENT_KATA
-            fi
-            info_msg "프로젝트 타입: Kata ($project_name)"
-            ;;
-        "$PROJECT_TYPE_LESSON")
-            project_name="$CURRENT_LESSON"
-            if [[ -z "$project_name" ]]; then
-                error_exit ".katarc에 CURRENT_LESSON 변수가 설정되지 않았습니다." $ERROR_NO_CURRENT_KATA
-            fi
-            info_msg "프로젝트 타입: Lesson ($project_name)"
-            ;;
-        *)
-            error_exit "알 수 없는 프로젝트 타입: $project_type (kata 또는 lesson만 허용됩니다)" $ERROR_MISSING_ARGS
-            ;;
-    esac
-
-    echo "$project_name"
+    info_msg "현재 레슨: $CURRENT_LESSON"
 }
 
 # Resolve study directory path
 get_study_path() {
-    local kata="$1"
-    echo "$PROJECT_ROOT/$kata/docs/study"
+    local lesson="$1"
+    echo "$PROJECT_ROOT/$lesson/docs/study"
 }
 
 # Get archive file path
@@ -218,7 +182,7 @@ cmd_search() {
     load_katarc
 
     # Resolve paths
-    local study_path=$(get_study_path "$CURRENT_KATA")
+    local study_path=$(get_study_path "$CURRENT_LESSON")
     local archive_path=$(get_archive_path "$study_path")
 
     # Check if archive exists
@@ -299,7 +263,7 @@ cmd_stats() {
     load_katarc
 
     # Resolve paths
-    local study_path=$(get_study_path "$CURRENT_KATA")
+    local study_path=$(get_study_path "$CURRENT_LESSON")
     local archive_path=$(get_archive_path "$study_path")
 
     # Check if archive exists
@@ -357,7 +321,6 @@ cmd_stats() {
 cmd_add() {
     local keyword=""
     local content=""
-    local project_type=""
 
     # Parse flags
     while [[ $# -gt 0 ]]; do
@@ -368,13 +331,6 @@ cmd_add() {
                 ;;
             --content)
                 content="$2"
-                shift 2
-                ;;
-            --type)
-                project_type="$2"
-                if [[ "$project_type" != "kata" && "$project_type" != "lesson" ]]; then
-                    error_exit "--type must be 'kata' or 'lesson'" $ERROR_MISSING_ARGS
-                fi
                 shift 2
                 ;;
             *)
@@ -391,11 +347,8 @@ cmd_add() {
     # Load configuration
     load_katarc
 
-    # Resolve project (CLI type overrides default)
-    local project_name=$(resolve_project "$project_type")
-
     # Resolve paths
-    local study_path=$(get_study_path "$project_name")
+    local study_path=$(get_study_path "$CURRENT_LESSON")
     local archive_path=$(get_archive_path "$study_path")
 
     # Ensure directory and file exist
@@ -430,19 +383,19 @@ usage() {
 
 예시:
   # 노트 추가
-  $0 add --keyword "fork, exec" --content "fork()는 프로세스를 복제하고, exec()는 새 프로그램으로 교체한다."
-  $0 add --keyword "메모리 누수" --content "Valgrind로 메모리 누수를 확인했다. free() 누락 발견."
+  $0 add --keyword "변수, 타입" --content "Java에서 int는 4바이트 정수형이다."
+  $0 add --keyword "조건문" --content "if-else 문을 사용하여 조건부 실행을 구현할 수 있다."
 
   # 키워드 검색
-  $0 search --keyword "fork"
-  $0 search --keyword "메모리"
+  $0 search --keyword "변수"
+  $0 search --keyword "조건문"
 
   # 키워드 통계
   $0 stats
 
 환경:
-  .katarc 파일에서 CURRENT_KATA를 읽어 대상 프로젝트를 결정합니다.
-  아카이브 위치: \${CURRENT_KATA}/docs/study/아카이브.md
+  .katarc 파일에서 CURRENT_LESSON을 읽어 대상 레슨을 결정합니다.
+  아카이브 위치: \${CURRENT_LESSON}/docs/study/아카이브.md
 
 EOF
 }
