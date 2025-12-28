@@ -25,6 +25,7 @@ cd ~\Downloads
 ```powershell
 # 현재 사용자에 대해서만 스크립트 실행 허용 (권장)
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```
 
 상세 가이드: [Windows 자동 설치](docs/dev-setting/windows-auto-install.md)
