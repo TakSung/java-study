@@ -18,6 +18,12 @@ AP Computer Science A 학습을 위한 Java 프로젝트입니다.
 # 2. 프로젝트 디렉토리로 이동
 cd ~\Downloads
 .\window_dev_installer.ps1
+
+# npm 설치 이후에 gemini 설치
+npm install -g @google/gemini-cli
+
+# claude 를 설치하고 싶은 경우
+# npm install -g @anthropic-ai/claude-code
 ```
 
 - 안돼면 아래 명령어 powershell에서 실행해 보기
