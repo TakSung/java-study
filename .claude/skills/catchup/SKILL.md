@@ -10,14 +10,14 @@ allowed-tools: Bash
 
 ## 주요 기능
 
-모든 기능은 `./scripts/git-helper.sh`를 통해 접근합니다.
+모든 기능은 `scripts\git-helper.bat`를 통해 접근합니다.
 
 | 작업 | 명령어 | 설명 |
 |---|---|---|
-| **미커밋 변경사항** | `./scripts/git-helper.sh status` | Staged + Unstaged 변경사항 확인 |
-| **직전 커밋** | `./scripts/git-helper.sh last` | 가장 최근 커밋 상세 정보 |
-| **최근 커밋 목록** | `./scripts/git-helper.sh log [n]` | 최근 n개 커밋 목록 (기본값: 10) |
-| **커밋 범위 비교** | `./scripts/git-helper.sh diff <start> <end>` | 두 커밋 사이의 변경사항 |
+| **미커밋 변경사항** | `scripts\git-helper.bat status` | Staged + Unstaged 변경사항 확인 |
+| **직전 커밋** | `scripts\git-helper.bat last` | 가장 최근 커밋 상세 정보 |
+| **최근 커밋 목록** | `scripts\git-helper.bat log [n]` | 최근 n개 커밋 목록 (기본값: 10) |
+| **커밋 범위 비교** | `scripts\git-helper.bat diff <start> <end>` | 두 커밋 사이의 변경사항 |
 
 ### 필터링 옵션
 
@@ -26,11 +26,11 @@ allowed-tools: Bash
 | 옵션 | 설명 | 사용 예시 |
 |---|---|---|
 | `--code-only` | 코드 파일만 표시 (문서, 설정 파일 제외) | `./scripts/git-helper.sh --code-only status` |
-| `--no-meta-commits` | 메타 커밋 제외 (docs, prompt, config 등) | `./scripts/git-helper.sh --no-meta-commits log` |
+| `--no-meta-commits` | 메타 커밋 제외 (docs, prompt, config 등) | `scripts\git-helper.bat --no-meta-commits log` |
 
 **필터링 대상 (--code-only):**
 - 제외: `docs/*`, `.claude/*`, `.gemini/*`, `*.md`, `*.toml`, `.gitignore`, `.katarc`
-- 포함: 실제 코드 파일 (`.py`, `.sh` 등)
+- 포함: 실제 코드 파일 (`.py`, `.bat` 등)
 
 **필터링 커밋 (--no-meta-commits):**
 - 제외: `^prompt`, `^📌`, `^docs`, `^📝`, `^config`, `^🔧`, `^chore`, `^style`, `^refactor`, `^test`, `^build`, `^ci`
@@ -45,12 +45,12 @@ allowed-tools: Bash
 > "지금까지 뭐 작업했는지 catchup 해줘"
 
 **스킬 동작:**
-```bash
-# 미커밋 변경사항
-./scripts/git-helper.sh status
+```cmd
+REM 미커밋 변경사항
+scripts\git-helper.bat status
 
-# 최근 커밋
-./scripts/git-helper.sh last
+REM 최근 커밋
+scripts\git-helper.bat last
 ```
 
 ### 예시 2: 코드만 확인
@@ -59,8 +59,8 @@ allowed-tools: Bash
 > "문서 빼고 코드 변경사항만 보여줘"
 
 **스킬 동작:**
-```bash
-./scripts/git-helper.sh --code-only status
+```cmd
+scripts\git-helper.bat --code-only status
 ```
 
 ### 예시 3: 최근 히스토리 확인
@@ -69,8 +69,8 @@ allowed-tools: Bash
 > "최근에 어떤 작업들을 했는지 커밋 목록 보여줘"
 
 **스킬 동작:**
-```bash
-./scripts/git-helper.sh log 10
+```cmd
+scripts\git-helper.bat log 10
 ```
 
 ### 예시 4: 의미있는 커밋만 확인
@@ -79,8 +79,8 @@ allowed-tools: Bash
 > "문서 커밋 빼고 실제 기능 커밋만 보여줘"
 
 **스킬 동작:**
-```bash
-./scripts/git-helper.sh --no-meta-commits log 20
+```cmd
+scripts\git-helper.bat --no-meta-commits log 20
 ```
 
 ### 예시 5: 특정 범위 조사
@@ -89,8 +89,8 @@ allowed-tools: Bash
 > "커밋 abc123부터 def456까지 뭐가 바뀌었는지 보여줘"
 
 **스킬 동작:**
-```bash
-./scripts/git-helper.sh diff abc123 def456
+```cmd
+scripts\git-helper.bat diff abc123 def456
 ```
 
 ### 예시 6: 코드만 + 메타 커밋 제외
@@ -99,8 +99,8 @@ allowed-tools: Bash
 > "실제 기능 구현 코드만 최근 10개 커밋 보여줘"
 
 **스킬 동작:**
-```bash
-./scripts/git-helper.sh --code-only --no-meta-commits log 10
+```cmd
+scripts\git-helper.bat --code-only --no-meta-commits log 10
 ```
 
 ---

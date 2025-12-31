@@ -1,27 +1,27 @@
 ---
 name: python-runner
-description: Python 프로젝트 실행, 테스트, 문법 검사, 임포트 검증을 위한 스킬. `scripts/python-runner.sh`를 사용합니다.
+description: Python 프로젝트 실행, 테스트, 문법 검사, 임포트 검증을 위한 스킬. `scripts\python-runner.bat`를 사용합니다.
 allowed-tools: Bash
 ---
 
 # Python Runner - 파이썬 실행 및 검증 스킬
 
-이 스킬은 `scripts/python-runner.sh` 래퍼 스크립트를 사용하여 `.venv` 가상환경에서 Python 프로젝트를 실행, 테스트 및 검증합니다.
+이 스킬은 `scripts\python-runner.bat` 래퍼 스크립트를 사용하여 `.venv` 가상환경에서 Python 프로젝트를 실행, 테스트 및 검증합니다.
 
 모든 명령어는 `.katarc` 파일에 정의된 현재 `kata` 프로젝트의 컨텍스트에서 실행됩니다.
 
 ## 주요 명령어
 
-모든 기능은 `./scripts/python-runner.sh`를 통해 접근합니다.
+모든 기능은 `scripts\python-runner.bat`를 통해 접근합니다.
 
 | 작업 | 명령어 | 설명 |
 |---|---|---|
-| **테스트 실행** | `./scripts/python-runner.sh test [test_path]` | 모든 테스트 또는 특정 테스트 실행 |
-| **프로젝트 실행** | `./scripts/python-runner.sh run [module]` | Python 모듈 실행 (기본값: `{CURRENT_KATA}.main`) |
-| **문법 검사** | `./scripts/python-runner.sh syntax-check <file_path>` | Python 파일 문법 검사 |
-| **임포트 검증** | `./scripts/python-runner.sh import-check` | 임포트 전략 검증 (절대 임포트) |
-| **정리** | `./scripts/python-runner.sh clean` | 빌드 아티팩트 삭제 (`__pycache__`, `.pyc` 등) |
-| **도움말** | `./scripts/python-runner.sh help` | 사용 가능한 모든 명령어 확인 |
+| **테스트 실행** | `scripts\python-runner.bat test [test_path]` | 모든 테스트 또는 특정 테스트 실행 |
+| **프로젝트 실행** | `scripts\python-runner.bat run [module]` | Python 모듈 실행 (기본값: `{CURRENT_KATA}.main`) |
+| **문법 검사** | `scripts\python-runner.bat syntax-check <file_path>` | Python 파일 문법 검사 |
+| **임포트 검증** | `scripts\python-runner.bat import-check` | 임포트 전략 검증 (절대 임포트) |
+| **정리** | `scripts\python-runner.bat clean` | 빌드 아티팩트 삭제 (`__pycache__`, `.pyc` 등) |
+| **도움말** | `scripts\python-runner.bat help` | 사용 가능한 모든 명령어 확인 |
 
 ---
 
@@ -33,8 +33,8 @@ allowed-tools: Bash
 > "테스트 돌려줘"
 
 **스킬 동작:**
-```bash
-./scripts/python-runner.sh test
+```cmd
+scripts\python-runner.bat test
 ```
 
 ### 예시 2: 특정 테스트 실행
@@ -43,8 +43,8 @@ allowed-tools: Bash
 > "게임 테스트만 실행해줘"
 
 **스킬 동작:**
-```bash
-./scripts/python-runner.sh test hidden-number/tests/test_game.py
+```cmd
+scripts\python-runner.bat test hidden-number\tests\test_game.py
 ```
 
 ### 예시 3: main.py 실행
@@ -53,8 +53,8 @@ allowed-tools: Bash
 > "main.py 실행해줘"
 
 **스킬 동작:**
-```bash
-./scripts/python-runner.sh run
+```cmd
+scripts\python-runner.bat run
 ```
 
 ### 예시 4: 특정 파일 문법 검사
@@ -63,8 +63,8 @@ allowed-tools: Bash
 > "game.py 파일 문법 검사해줘"
 
 **스킬 동작:**
-```bash
-./scripts/python-runner.sh syntax-check hidden-number/domain/game.py
+```cmd
+scripts\python-runner.bat syntax-check hidden-number\domain\game.py
 ```
 
 ### 예시 5: 임포트 검증
@@ -73,8 +73,8 @@ allowed-tools: Bash
 > "임포트 제대로 됐는지 확인해줘"
 
 **스킬 동작:**
-```bash
-./scripts/python-runner.sh import-check
+```cmd
+scripts\python-runner.bat import-check
 ```
 
 **출력 예시:**
@@ -97,8 +97,8 @@ collected 10 items
 > "캐시 파일 정리해줘"
 
 **스킬 동작:**
-```bash
-./scripts/python-runner.sh clean
+```cmd
+scripts\python-runner.bat clean
 ```
 
 ---
